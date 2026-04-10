@@ -36,13 +36,16 @@ ARG KAIGARA_VERSION=0.1.24
 RUN curl -Lo /usr/bin/kaigara https://github.com/openware/kaigara/releases/download/${KAIGARA_VERSION}/kaigara \
     && chmod +x /usr/bin/kaigara
 
+# Create versioned ruby symlink (bundler binstubs use ruby2.6)
+RUN ln -s /usr/local/bin/ruby /usr/local/bin/ruby2.6
+
 WORKDIR $APP_HOME
 USER app
 
 COPY --chown=app:app Gemfile Gemfile.lock $APP_HOME/
 
 # Install dependencies
-RUN gem update bundler
+RUN gem install bundler:2.2.3
 RUN bundle install --jobs=$(nproc) --system --binstubs --without development test
 
 # Copy the main application.

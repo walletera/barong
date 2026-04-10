@@ -42,6 +42,19 @@ bundle exec rails server
 bundle exec sidekiq                                  # background jobs
 ```
 
+### Building the Docker Image
+
+```bash
+docker build -t <image>:<tag> .
+```
+
+Known issues that were fixed in the `Dockerfile` and `.dockerignore`:
+
+- **Bundler version**: the original `gem update bundler` installed the latest bundler, but `Gemfile.lock` requires exactly `2.2.3`. The Dockerfile uses `gem install bundler:2.2.3` instead.
+- **`ruby2.6` symlink**: bundler binstubs use `#!/usr/bin/env ruby2.6`, but the `ruby:2.6.6` base image only provides `ruby`. A symlink is created at build time: `ln -s /usr/local/bin/ruby /usr/local/bin/ruby2.6`.
+- **`vendor/bundle` in `.dockerignore`**: the local `vendor/bundle` directory (gems compiled for the host OS) must be excluded so the container compiles its own native extensions. Without this exclusion, gems with native extensions (e.g., `msgpack`) fail to load.
+- **`.bundle` in `.dockerignore`**: the local `.bundle/config` sets `BUNDLE_PATH: "vendor/bundle"`, which — if copied into the image — causes bundler to look for gems in the excluded path and fail.
+
 ## Architecture
 
 ### API Layer (Grape, not Rails controllers)
