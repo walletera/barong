@@ -35,7 +35,8 @@ class ServiceAccount < ApplicationRecord
   end
 
   def as_payload
-    as_json(only: %i[uid email role level state])
+    as_json(only: %i[email role level state])
+      .merge('uid' => user.uid, 'sid' => uid)
   end
 
   def role_exists

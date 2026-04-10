@@ -1,0 +1,52 @@
+services:
+  mysql:
+    container_name: barong-mysql
+    image: mysql:8.4
+    ports:
+      - "3307:3306"
+    command: --mysql-native-password=ON --authentication-policy=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "abc123"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pabc123"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  rabbitmq:
+    image: "rabbitmq:3.8.0-management"
+    container_name: "barong-rabbitmq"
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmqadmin", "list", "queues"]
+      start_period: "5s"
+
+  redis:
+    container_name: barong-redis
+    image: redis:5
+    ports:
+      - "6380:6379"
+
+  vault:
+    container_name: barong-vault
+    image: vault:1.3.4
+    command: ["server", "-dev"]
+    ports:
+      - "8200:8200"
+    volumes:
+      - "../local-testing/vault/barong-rails.hcl:/opt/barong-rails.hcl"
+      - "../local-testing/vault/barong-authz.hcl:/opt/barong-authz.hcl"
+    environment:
+      VAULT_TOKEN: "changeme"
+      VAULT_DEV_ROOT_TOKEN_ID: "changeme"
+      VAULT_ADDR: "http://127.0.0.1:8200"
+      VAULT_LOG_LEVEL: "info"
+    healthcheck:
+      test: ["CMD", "vault", "status"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 5s

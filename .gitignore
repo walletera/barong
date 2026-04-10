@@ -30,3 +30,4 @@
 /config/rsa-key
 
 .idea/
+vendor/bundle
