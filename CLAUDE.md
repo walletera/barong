@@ -17,21 +17,55 @@ bundle exec rake db:create db:migrate
 
 ### Running Tests
 
-Tests require MySQL, RabbitMQ, and Redis. Start them from `local-testing/`:
+A `Makefile` wraps all test setup and execution. For most cases, just run:
+
+```bash
+make test_all       # start deps, configure Vault, migrate DB, run full suite
+make deps-up        # start MySQL, RabbitMQ, Redis, Vault
+make vault-setup    # initialize Vault secret engines (once after first deps-up)
+make db-setup       # create and migrate the test database (once)
+make deps-down      # stop and remove containers
+```
+
+The Makefile handles all required env vars (`DATABASE_PASS`, `BARONG_VAULT_TOKEN`, etc.) automatically.
+
+For running individual spec files after deps are already up:
+
+```bash
+export DATABASE_PASS=abc123
+export BARONG_VAULT_TOKEN=changeme
+bundle exec rspec spec/path/to/file_spec.rb
+bundle exec rspec spec/path/to/file_spec.rb:42
+```
+
+#### Manual dependency setup (alternative to Makefile)
+
+Tests require MySQL, RabbitMQ, Redis, and Vault. Start them from `local-testing/`:
 
 ```bash
 docker compose -f ../local-testing/mysql/compose.yml up -d
 docker compose -f ../local-testing/rabbitmq/compose.yaml up -d
 docker compose -f ../local-testing/redis/compose.yml up -d
+docker compose -f ../local-testing/vault/compose.yml up -d
+docker exec vault vault policy write ../local-testing/barong-rails /opt/barong-rails.hcl
+docker exec vault vault policy write ../local-testing/barong-authz /opt/barong-authz.hcl
+docker exec vault vault token create -policy=barong-rails -period=240h
+docker exec vault vault token create -policy=barong-authz -period=240h
+docker exec vault vault secrets disable secret
+docker exec vault vault secrets enable -path=secret -version=1 kv
+docker exec vault vault secrets enable totp
+docker exec vault vault secrets enable transit
 ```
 
 The MySQL root password is `abc123` — pass it via env var:
 
 ```bash
-DATABASE_PASS=abc123 bundle exec rake db:create db:migrate RAILS_ENV=test   # first time only
-DATABASE_PASS=abc123 bundle exec rspec                                       # all tests
-DATABASE_PASS=abc123 bundle exec rspec spec/path/to/file_spec.rb             # single file
-DATABASE_PASS=abc123 bundle exec rspec spec/path/to/file_spec.rb:42          # single test at line
+export DATABASE_PASS=abc123
+export BARONG_VAULT_TOKEN=changeme
+bundle exec rake db:create db:migrate RAILS_ENV=test   # first time only
+bundle exec rspec                                       # all tests
+bundle exec rspec spec/path/to/file_spec.rb             # single file
+bundle exec rspec spec/path/to/file_spec.rb:42          # single test at line
 ```
 
 CI runs against MySQL 5.7, MariaDB 10.3, MySQL 8.0, and PostgreSQL 13.0.
