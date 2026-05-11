@@ -24,23 +24,9 @@ RSpec.describe User, type: :model do
     it { should have_many(:profiles).dependent(:destroy) }
 
     ## Test of UID creation
-    it 'creates default uid with prefix ID' do
+    it 'creates uid in UUID format' do
       default_user = create(:user)
-      expect(default_user.uid).to start_with(Barong::App.config.uid_prefix)
-    end
-
-    it 'uid prefix can be changed by ENV' do
-      allow(Barong::App.config).to receive(:uid_prefix).and_return('GG')
-
-      default_user = create(:user)
-      expect(default_user.uid).to start_with('GG')
-    end
-
-    it 'uid_prefix doesnt case sensitive and always converts to big letters' do
-      allow(Barong::App.config).to receive(:uid_prefix).and_return('aa')
-
-      default_user = create(:user)
-      expect(default_user.uid).to start_with('AA')
+      expect(default_user.uid).to match(/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/)
     end
 
     it do

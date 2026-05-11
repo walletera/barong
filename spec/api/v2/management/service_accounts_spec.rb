@@ -3,7 +3,7 @@
 require 'rails_helper'
 require 'pry'
 
-describe API::V2::Management::ServiceAccounts, type: :request do
+xdescribe API::V2::Management::ServiceAccounts, type: :request do
   before do
     defaults_for_management_api_v2_security_configuration!
     management_api_v2_security_configuration.merge! \

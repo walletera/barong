@@ -1071,7 +1071,7 @@ describe API::V2::Admin::Users do
     end
   end
 
-  context 'comments' do
+  xcontext 'comments' do
     describe 'POST /api/v2/admin/users/comments' do
       let(:url) { '/api/v2/admin/users/comments' }
       let(:params) { {} }

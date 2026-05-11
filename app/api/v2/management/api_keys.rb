@@ -23,19 +23,10 @@ module API::V2
                    desc: 'Comma separated scopes'
         end
         post do
-          if params[:uid].start_with?(Barong::App.config.uid_prefix)
-            error!({ error: 'disabled_management_endpoint' }, 422) unless Barong::App.config.mgn_api_keys_user
+          error!({ error: 'disabled_management_endpoint' }, 422) unless Barong::App.config.mgn_api_keys_user
 
-            key_holder = User.find_by(uid: params[:uid])
-            error!({ error: 'user_doesnt_exist' }, 422) unless key_holder
-          elsif params[:uid].start_with?(ServiceAccount::UID_PREFIX)
-            error!({ error: 'disabled_management_endpoint' }, 422) unless Barong::App.config.mgn_api_keys_sa
-
-            key_holder = ServiceAccount.find_by(uid: params[:uid])
-            error!({ error: 'service_account_doesnt_exist' }, 422) unless key_holder
-          else
-            error!({ error: 'uid_prefix_doesnt_exist'}, 422)
-          end
+          key_holder = User.find_by(uid: params[:uid])
+          error!({ error: 'user_doesnt_exist' }, 422) unless key_holder
 
           declared_params = declared(params, include_missing: false)
                               .except(:uid, :scopes)
@@ -79,19 +70,10 @@ module API::V2
                    desc: 'State of API Key. "active" state means key is active and can be used for auth'
         end
         post '/update' do
-          if params[:uid].start_with?(Barong::App.config.uid_prefix)
-            error!({ error: 'disabled_management_endpoint' }, 422) unless Barong::App.config.mgn_api_keys_user
+          error!({ error: 'disabled_management_endpoint' }, 422) unless Barong::App.config.mgn_api_keys_user
 
-            key_holder = User.find_by(uid: params[:uid])
-            error!({ error: 'user_doesnt_exist' }, 422) unless key_holder
-          elsif params[:uid].start_with?(ServiceAccount::UID_PREFIX)
-            error!({ error: 'disabled_management_endpoint' }, 422) unless Barong::App.config.mgn_api_keys_sa
-
-            key_holder = ServiceAccount.find_by(uid: params[:uid])
-            error!({ error: 'service_account_doesnt_exist' }, 422) unless key_holder
-          else
-            error!({ error: 'uid_prefix_doesnt_exist'}, 422)
-          end
+          key_holder = User.find_by(uid: params[:uid])
+          error!({ error: 'user_doesnt_exist' }, 422) unless key_holder
 
           declared_params = declared(params, include_missing: false)
                               .except(:uid, :scopes)

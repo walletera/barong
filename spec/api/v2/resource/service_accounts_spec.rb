@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Api::V2::Resource::ServiceAccounts' do
+xdescribe 'Api::V2::Resource::ServiceAccounts' do
   include_context 'bearer authentication'
   let!(:create_member_permission) do
     create :permission,

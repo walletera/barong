@@ -7,7 +7,7 @@ module API::V2
     class Users < Grape::API
       helpers do
         def parse_refid!
-          error!({ errors: ['identity.user.invalid_referral_format'] }, 422) unless params[:refid].start_with?(Barong::App.config.uid_prefix.upcase)
+          error!({ errors: ['identity.user.invalid_referral_format'] }, 422) unless params[:refid].match?(/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/i)
           user = User.find_by_uid(params[:refid])
           error!({ errors: ['identity.user.referral_doesnt_exist'] }, 422) if user.nil?
 

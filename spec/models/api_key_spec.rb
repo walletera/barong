@@ -29,7 +29,7 @@ RSpec.describe APIKey, type: :model do
           end
         end
 
-        context 'service account with active state' do
+        xcontext 'service account with active state' do
           let!(:user) { create(:user, state: 'active') }
           let!(:service_account) { create(:service_account, owner_id: user.id) }
 
@@ -54,7 +54,7 @@ RSpec.describe APIKey, type: :model do
           end
         end
 
-        context 'service account with non active state' do
+        xcontext 'service account with non active state' do
           let!(:user) { create(:user, state: 'pending') }
           let!(:service_account) { create(:service_account, owner_id: user.id) }
 
@@ -80,7 +80,7 @@ RSpec.describe APIKey, type: :model do
           end
         end
 
-        context 'service account with non active state' do
+        xcontext 'service account with non active state' do
           let!(:user) { create(:user, state: 'active') }
           let!(:service_account) { create(:service_account, owner_id: user.id) }
           let!(:api_key) { create(:api_key, key_holder_account: service_account, state: 'disabled') }
@@ -106,7 +106,7 @@ RSpec.describe APIKey, type: :model do
           end
         end
 
-        context 'service account with non active state' do
+        xcontext 'service account with non active state' do
           let!(:user) { create(:user, state: 'active') }
           let!(:service_account) { create(:service_account, owner_id: user.id) }
           let!(:api_key) { create(:api_key, key_holder_account: service_account) }

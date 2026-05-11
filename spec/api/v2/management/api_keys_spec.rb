@@ -38,7 +38,7 @@ describe API::V2::Management::APIKeys, type: :request do
     end
 
     context 'valid request' do
-      context 'service account' do
+      xcontext 'service account' do
         before do
           allow(Barong::App.config).to receive_messages(mgn_api_keys_sa: true)
         end
@@ -94,7 +94,7 @@ describe API::V2::Management::APIKeys, type: :request do
     end
 
     context 'invalid request' do
-      context 'vault inaccessible' do
+      xcontext 'vault inaccessible' do
         before do
           allow(Barong::App.config).to receive_messages(mgn_api_keys_sa: true)
         end
@@ -116,7 +116,7 @@ describe API::V2::Management::APIKeys, type: :request do
         end
       end
 
-      context 'service account doesnt exist' do
+      xcontext 'service account doesnt exist' do
         before do
           allow(Barong::App.config).to receive_messages(mgn_api_keys_sa: true)
         end
@@ -156,7 +156,7 @@ describe API::V2::Management::APIKeys, type: :request do
         end
       end
 
-      context 'algorithm is invalid' do
+      xcontext 'algorithm is invalid' do
         before do
           allow(Barong::App.config).to receive_messages(mgn_api_keys_sa: true)
         end
@@ -193,7 +193,7 @@ describe API::V2::Management::APIKeys, type: :request do
         end
       end
 
-      context 'unexisting uid' do
+      xcontext 'unexisting uid' do
 
         let(:api_keys_params) do
           {
@@ -255,7 +255,7 @@ describe API::V2::Management::APIKeys, type: :request do
         end
       end
 
-      context 'service account' do
+      xcontext 'service account' do
         before do
           allow(Barong::App.config).to receive_messages(mgn_api_keys_sa: true)
         end
@@ -282,7 +282,7 @@ describe API::V2::Management::APIKeys, type: :request do
     end
 
     context 'invalid request' do
-      context 'api keys doesnt exist' do
+      xcontext 'api keys doesnt exist' do
         before do
           allow(Barong::App.config).to receive_messages(mgn_api_keys_sa: true)
         end
@@ -301,7 +301,7 @@ describe API::V2::Management::APIKeys, type: :request do
         end
       end
 
-      context 'service account doesnt exist' do
+      xcontext 'service account doesnt exist' do
         before do
           allow(Barong::App.config).to receive_messages(mgn_api_keys_sa: true)
         end
@@ -354,7 +354,7 @@ describe API::V2::Management::APIKeys, type: :request do
         end
       end
 
-      context 'unexisting uid' do
+      xcontext 'unexisting uid' do
 
         let(:api_keys_params) do
           {

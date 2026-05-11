@@ -82,7 +82,7 @@ describe API::V2::Identity::Users do
     end
 
     context 'when referral is unexist' do
-      let(:params) { { email: 'valid.email@gmail.com', password: 'Password1', refid: 'ID1231231231' } }
+      let(:params) { { email: 'valid.email@gmail.com', password: 'Password1', refid: '00000000-0000-0000-0000-000000000000' } }
 
       it 'renders an error' do
         do_request
